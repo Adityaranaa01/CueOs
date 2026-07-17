@@ -70,7 +70,7 @@ html, body {
   -webkit-backdrop-filter: blur(24px) saturate(160%);
 }
 .tb-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.10); margin: 0 2px; }
-#toolbar button { border: none; background: transparent; color: #fff; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background 140ms ease, transform 140ms ease; }
+#toolbar button { border: none; background: transparent; color: #fff; cursor: default; display: inline-flex; align-items: center; justify-content: center; transition: background 140ms ease, transform 140ms ease; }
 .tb-logo { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.06) !important; }
 .tb-logo:hover { background: rgba(255,255,255,0.12) !important; }
 .tb-hide { gap: 6px; padding: 5px 12px 5px 10px; border-radius: var(--r-pill); font-size: 13px; font-weight: 500; }
@@ -153,7 +153,7 @@ button:focus { outline: none; }
 }
 .act {
   display: inline-flex; align-items: center; gap: 6px;
-  border: none; background: transparent; cursor: pointer;
+  border: none; background: transparent; cursor: default;
   color: var(--tx-2); font-size: 14px; font-weight: 500; font-family: var(--font);
   padding: 5px 7px; border-radius: 8px;
   transition: background 140ms ease, color 140ms ease;
@@ -205,7 +205,7 @@ button:focus { outline: none; }
   padding: 5px 11px; border-radius: var(--r-pill);
   border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05);
   color: var(--tx-2); font-size: 13px; font-weight: 500; font-family: var(--font);
-  cursor: pointer; transition: all 140ms ease;
+  cursor: default; transition: all 140ms ease;
 }
 .smart-pill .ic { display: inline-flex; color: var(--ic); }
 .smart-pill:hover { background: rgba(255,255,255,0.09); }
@@ -214,14 +214,14 @@ button:focus { outline: none; }
 .more-btn {
   width: 28px; height: 28px; border-radius: var(--r-8);
   border: none; background: transparent; color: rgba(255,255,255,0.7);
-  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  cursor: default; display: inline-flex; align-items: center; justify-content: center;
   transition: background 140ms ease;
 }
 .more-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
 #send-btn {
   width: 32px; height: 32px; border-radius: 50%;
   border: none; background: var(--accent); color: #fff;
-  display: grid; place-items: center; cursor: pointer;
+  display: grid; place-items: center; cursor: default;
   box-shadow: 0 2px 8px rgba(60,131,245,0.45);
   transition: transform 140ms ease, filter 140ms ease;
 }
@@ -239,12 +239,12 @@ button:focus { outline: none; }
 #settings { width: min(440px, 92vw); padding: 18px 20px; -webkit-app-region: no-drag; }
 .s-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .s-title { font-size: 17px; font-weight: 600; color: var(--tx-1); }
-.s-close { border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 13px; padding: 6px 14px; border-radius: var(--r-pill); cursor: pointer; }
+.s-close { border: none; background: var(--accent); color: #fff; font-weight: 600; font-size: 13px; padding: 6px 14px; border-radius: var(--r-pill); cursor: default; }
 .s-body { display: flex; flex-direction: column; gap: 8px; }
 .s-label { color: var(--tx-2); font-size: 13px; font-weight: 600; margin-top: 8px; }
 .s-hint { color: var(--tx-mut); font-weight: 400; font-size: 11px; margin-left: 6px; }
 .s-seg { display: flex; gap: 6px; }
-.s-seg button { flex: 1; padding: 8px; border-radius: var(--r-8); border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: var(--tx-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 140ms ease; }
+.s-seg button { flex: 1; padding: 8px; border-radius: var(--r-8); border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: var(--tx-2); font-size: 13px; font-weight: 500; cursor: default; transition: all 140ms ease; }
 .s-seg button.on { border-color: var(--accent); color: #fff; background: rgba(60,131,245,0.16); }
 .s-field { display: flex; align-items: center; gap: 10px; }
 .s-field span { width: 78px; color: var(--tx-mut); font-size: 12px; }
@@ -269,12 +269,12 @@ button:focus { outline: none; }
 .ob-body .hl { color: #9dc0ff; font-weight: 600; }
 .ob-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .ob-buttons:empty { display: none; }
-.ob-buttons button { flex: 1; min-width: 150px; padding: 10px; border-radius: 10px; border: 1px solid rgba(60,131,245,0.40); background: rgba(60,131,245,0.14); color: #cfe0ff; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 140ms ease; }
+.ob-buttons button { flex: 1; min-width: 150px; padding: 10px; border-radius: 10px; border: 1px solid rgba(60,131,245,0.40); background: rgba(60,131,245,0.14); color: #cfe0ff; font-size: 13px; font-weight: 600; cursor: default; transition: all 140ms ease; }
 .ob-buttons button:hover { background: rgba(60,131,245,0.24); }
 .ob-actions { display: flex; align-items: center; margin-top: 22px; }
-.ob-ghost { border: none; background: transparent; color: var(--tx-mut); font-size: 13px; font-weight: 500; cursor: pointer; padding: 8px 10px; border-radius: 8px; }
+.ob-ghost { border: none; background: transparent; color: var(--tx-mut); font-size: 13px; font-weight: 500; cursor: default; padding: 8px 10px; border-radius: 8px; }
 .ob-ghost:hover { color: #fff; background: rgba(255,255,255,0.06); }
-.ob-primary { border: none; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 999px; cursor: pointer; transition: filter 140ms ease; }
+.ob-primary { border: none; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 999px; cursor: default; transition: filter 140ms ease; }
 .ob-primary:hover { filter: brightness(1.08); }
 
 /* ============================ Animations ============================ */
@@ -289,3 +289,68 @@ button:focus { outline: none; }
   #panel, .user-bubble, .ai-text .w { animation: none !important; opacity: 1 !important; transform: none !important; }
   #live-dot { animation: none !important; }
 }
+
+.code-wrap {
+  position: relative;
+  margin: 12px 0;
+}
+.code-wrap pre {
+  margin: 0 !important;
+}
+.copy-code-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: default;
+  transition: all 140ms ease;
+  z-index: 10;
+}
+.copy-code-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.copy-code-btn.copied {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.35);
+}
+.copy-code-btn:active {
+  transform: scale(0.96);
+}
+
+body.collapsed-window #app {
+  padding-top: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#ghost-bubble {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: default;
+  transition: background 140ms ease, transform 140ms ease, opacity 140ms ease;
+  pointer-events: auto;
+  opacity: 0.35;
+}
+#ghost-bubble:hover {
+  background: rgba(255, 255, 255, 0.22);
+  opacity: 0.85;
+  transform: scale(1.05);
+}
+#ghost-bubble:active {
+  transform: scale(0.95);

@@ -37,8 +37,15 @@
     for (const raw of lines) {
       const line = raw;
       if (/^```/.test(line.trim())) {
-        if (!inCode) { flushP(); if (inList) { html += '</ul>'; inList = false; } html += '<pre><code>'; inCode = true; }
-        else { html += '</code></pre>'; inCode = false; }
+        if (!inCode) {
+          flushP();
+          if (inList) { html += '</ul>'; inList = false; }
+          html += '<div class="code-wrap"><button class="copy-code-btn">Copy</button><pre><code>';
+          inCode = true;
+        } else {
+          html += '</code></pre></div>';
+          inCode = false;
+        }
         continue;
       }
       if (inCode) { html += esc(line) + '\n'; continue; }
@@ -46,7 +53,7 @@
       if (line.trim() === '') { flushP(); if (inList) { html += '</ul>'; inList = false; } continue; }
       buf.push(line.trim());
     }
-    flushP(); if (inList) html += '</ul>'; if (inCode) html += '</code></pre>';
+    flushP(); if (inList) html += '</ul>'; if (inCode) html += '</code></pre></div>';
     return html;
   }
 
@@ -82,6 +89,24 @@
     if (!aiEl) return;
     const raw = aiEl.dataset.raw || '';
     aiEl.innerHTML = renderMarkdown(raw);
+    
+    // Attach click listeners to all copy buttons inside the current AI message
+    aiEl.querySelectorAll('.copy-code-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const pre = btn.nextElementSibling;
+        if (pre) {
+          const code = pre.textContent;
+          cue.copyText(code);
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 2000);
+        }
+      });
+    });
+
     aiEl = null; caretEl = null;
   }
 
@@ -132,12 +157,38 @@
     await cue.settingsSet({ smart: settings.smart });
   });
 
-  // Hide / collapse
-  $('#hide-btn').addEventListener('click', () => {
-    const collapsed = $('#panel').classList.toggle('collapsed');
-    $('#hide-btn').classList.toggle('collapsed', collapsed);
-    $('#live-dot').style.display = collapsed ? 'none' : '';
-  });
+  // Create the ghost bubble element
+  const ghostBubble = document.createElement('div');
+  ghostBubble.id = 'ghost-bubble';
+  ghostBubble.className = 'hidden';
+  ghostBubble.title = 'Click to restore cue';
+  $('#app').appendChild(ghostBubble);
+
+  async function collapseApp() {
+    document.body.classList.add('collapsed-window');
+    $('#toolbar').classList.add('hidden');
+    $('#panel-wrap').classList.add('hidden');
+    ghostBubble.classList.remove('hidden');
+    await cue.windowCollapse();
+  }
+
+  async function expandApp() {
+    await cue.windowExpand();
+    setTimeout(() => {
+      document.body.classList.remove('collapsed-window');
+      $('#toolbar').classList.remove('hidden');
+      $('#panel-wrap').classList.remove('hidden');
+      ghostBubble.classList.add('hidden');
+      
+      // Ensure panel is expanded
+      $('#panel').classList.remove('collapsed');
+      $('#hide-btn').classList.remove('collapsed');
+      $('#live-dot').style.display = '';
+    }, 150);
+  }
+
+  $('#hide-btn').addEventListener('click', collapseApp);
+  ghostBubble.addEventListener('click', expandApp);
 
   // Stop = start/stop listening. Kick off system-audio capture straight from the click so
   // the user-gesture is fresh for getDisplayMedia (loopback capture needs it).
@@ -255,14 +306,15 @@
     $('#key-openai').value = settings.apiKeys.openai || '';
     $('#key-anthropic').value = settings.apiKeys.anthropic || '';
     $('#key-gemini').value = settings.apiKeys.gemini || '';
+    $('#key-groq').value = settings.apiKeys.groq || '';
     const m = settings.models[settings.provider] || { fast: '', smart: '' };
     $('#model-fast').value = m.fast; $('#model-smart').value = m.smart;
     $('#s-status').textContent = statusText();
   }
   function statusText() {
     const k = settings.apiKeys;
-    const has = [k.openai && 'OpenAI', k.anthropic && 'Anthropic', k.gemini && 'Gemini'].filter(Boolean);
-    const stt = k.openai ? 'Whisper' : (k.gemini ? 'Gemini' : 'none');
+    const has = [k.openai && 'OpenAI', k.anthropic && 'Anthropic', k.gemini && 'Gemini', k.groq && 'Groq'].filter(Boolean);
+    const stt = k.openai ? 'Whisper' : (k.groq ? 'Groq' : (k.gemini ? 'Gemini' : 'none'));
     return 'Active: ' + settings.provider + ' · keys: ' + (has.join(', ') || 'none set') + ' · transcription: ' + stt;
   }
   document.querySelectorAll('#provider-seg button').forEach((b) => b.addEventListener('click', () => {
@@ -276,6 +328,7 @@
     settings.apiKeys.openai = $('#key-openai').value.trim();
     settings.apiKeys.anthropic = $('#key-anthropic').value.trim();
     settings.apiKeys.gemini = $('#key-gemini').value.trim();
+    settings.apiKeys.groq = $('#key-groq').value.trim();
     if (!settings.models[settings.provider]) settings.models[settings.provider] = {};
     settings.models[settings.provider].fast = $('#model-fast').value.trim();
     settings.models[settings.provider].smart = $('#model-smart').value.trim();
@@ -303,7 +356,7 @@
   function setIgnore(v) { if (v !== ignoring) { ignoring = v; cue.setIgnoreMouse(v); } }
   document.addEventListener('mousemove', (e) => {
     const el = document.elementFromPoint(e.clientX, e.clientY);
-    const overUI = !!(el && el.closest && el.closest('#toolbar, #panel-wrap, #settings-scrim, #onboard-scrim'));
+    const overUI = !!(el && el.closest && el.closest('#toolbar, #panel-wrap, #settings-scrim, #onboard-scrim, #ghost-bubble'));
     setIgnore(!overUI);
   });
   setIgnore(true); // start fully click-through; hovering the panel re-enables it

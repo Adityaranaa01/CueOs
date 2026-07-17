@@ -12,11 +12,20 @@ async function transcribeOpenAI(apiKey, wav, model) {
   return (res.text || '').trim();
 }
 
+async function transcribeGroq(apiKey, wav, model) {
+  const OpenAI = require('openai');
+  const toFile = OpenAI.toFile || require('openai/uploads').toFile;
+  const client = new OpenAI({ apiKey, baseURL: 'https://api.groq.com/openai/v1' });
+  const file = await toFile(wav, 'audio.wav', { type: 'audio/wav' });
+  const res = await client.audio.transcriptions.create({ file, model: model || 'whisper-large-v3' });
+  return (res.text || '').trim();
+}
+
 async function transcribeGemini(apiKey, wav) {
   const { GoogleGenAI } = require('@google/genai');
   const ai = new GoogleGenAI({ apiKey });
   const res = await ai.models.generateContent({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-flash-latest',
     contents: [{ role: 'user', parts: [
       { text: 'Transcribe this audio verbatim. Return only the spoken words with no commentary. If there is no clear speech, return an empty response.' },
       { inlineData: { mimeType: 'audio/wav', data: wav.toString('base64') } }
@@ -29,6 +38,7 @@ function createSTT(settings) {
   const keys = settings.apiKeys || {};
   const chain = [];
   if (keys.openai) chain.push({ p: 'openai', fn: (wav) => transcribeOpenAI(keys.openai, wav, settings.sttModel) });
+  if (keys.groq) chain.push({ p: 'groq', fn: (wav) => transcribeGroq(keys.groq, wav, settings.sttModel) });
   if (keys.gemini) chain.push({ p: 'gemini', fn: (wav) => transcribeGemini(keys.gemini, wav) });
 
   return {

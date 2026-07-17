@@ -175,6 +175,26 @@ ipcMain.on('system:pcm', (_e, arrayBuffer) => { if (state.capturing) buffers.the
 ipcMain.on('mouse:ignore', (_e, v) => { if (win) win.setIgnoreMouseEvents(!!v, { forward: true }); });
 ipcMain.on('open-pane', (_e, url) => { shell.openExternal(url).catch(() => {}); });
 ipcMain.on('log', (_e, msg) => console.log('[renderer]', msg));
+ipcMain.on('copy-text', (_e, text) => {
+  const { clipboard } = require('electron');
+  clipboard.writeText(text);
+});
+ipcMain.handle('window:collapse', () => {
+  if (!win) return;
+  const { workArea } = screen.getPrimaryDisplay();
+  const size = 44;
+  const x = workArea.x + workArea.width - size - 16;
+  const y = workArea.y + workArea.height - size - 16;
+  win.setBounds({ x, y, width: size, height: size }, true);
+});
+ipcMain.handle('window:expand', () => {
+  if (!win) return;
+  const { workArea } = screen.getPrimaryDisplay();
+  const W = 700, H = 600;
+  const x = Math.round(workArea.x + (workArea.width - W) / 2);
+  const y = workArea.y + 6;
+  win.setBounds({ x, y, width: W, height: H }, true);
+});
 
 // -------- shortcuts --------
 function registerShortcuts() {
